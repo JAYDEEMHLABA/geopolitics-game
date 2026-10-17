@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geopolitics Game - Battlefield</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h2>🌍 Geopolitics: Battlefield</h2>
+            <div>
+                <span id="player-info">Welcome, Player</span>
+                <button onclick="logout()" style="width: auto; padding: 5px 15px; margin-left: 15px;">Logout</button>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div>
+                <h3 style="margin-bottom: 15px;">Territories</h3>
+                <div id="countries-grid" class="countries-grid">
+                    <!-- Countries will load here -->
+                </div>
+            </div>
+
+            <div class="side-panel">
+                <h3>Battle Log</h3>
+                <div id="battle-log" class="battle-log">
+                    <p>Loading game...</p>
+                </div>
+                
+                <div class="actions">
+                    <button id="attack-btn" onclick="executeAttack()" disabled>⚔️ Attack Selected</button>
+                    <button class="secondary" onclick="endTurn()" style="color: #4CAF50; border-color: #4CAF50;">⏭️ End Turn (Skip)</button>
+                    <button class="secondary" onclick="createNewGame()" style="color: #e94560; border-color: #e94560;">🔄 Start New Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

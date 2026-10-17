@@ -1,0 +1,88 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background-color: #1a1a2e;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.auth-container {
+    background-color: #16213e;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h1 { color: #e94560; margin-bottom: 10px; }
+p { color: #a9a9a9; margin-bottom: 20px; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #0f3460;
+    background-color: #1a1a2e;
+    color: white;
+    border-radius: 5px;
+    outline: none;
+}
+input:focus { border-color: #e94560; }
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #e94560;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+button:hover { background-color: #c42a42; }
+button.secondary { background-color: transparent; border: 1px solid #e94560; color: #e94560; }
+button.secondary:hover { background-color: #e94560; color: white; }
+
+.error { background-color: #ff4d4d; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
+.hidden { display: none; }
+
+/* GAME BOARD STYLES */
+.game-container { display: none; max-width: 1200px; margin: 20px auto; padding: 20px; }
+.game-active .auth-container { display: none; }
+.game-active .game-container { display: block; }
+
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #e94560; }
+h2 { color: #e94560; }
+
+.dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.countries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+
+.country-card {
+    background-color: #16213e;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+}
+.country-card:hover { border-color: #e94560; transform: translateY(-2px); }
+.country-card.player-owned { border-color: #4CAF50; background-color: #1b3a2a; }
+.country-card.selected { border-color: #e94560; box-shadow: 0 0 15px rgba(233, 69, 96, 0.5); }
+
+.country-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+.country-soldiers { font-size: 24px; color: #e94560; font-weight: bold; }
+.owner-badge { font-size: 12px; background: #333; padding: 2px 6px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+
+.side-panel { background-color: #16213e; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; }
+.battle-log { flex-grow: 1; background: #111; padding: 10px; border-radius: 5px; height: 400px; overflow-y: auto; font-size: 14px; line-height: 1.5; margin-bottom: 20px; }
+.battle-log p { margin-bottom: 8px; border-bottom: 1px solid #222; padding-bottom: 5px; }
+
+.actions { display: flex; flex-direction: column; gap: 10px; }
