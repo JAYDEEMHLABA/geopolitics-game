@@ -1,6 +1,5 @@
 const { resolveBattle, soldiersGained } = require('./battle');
 
-// NPC personalities
 const NPC_PERSONALITIES = {
   aggressive: { minSoldierAdvantage: 0, maxConquestsPerTurn: 2, maxAttacksPerTurn: 5 },
   cautious: { minSoldierAdvantage: 2, maxConquestsPerTurn: 1, maxAttacksPerTurn: 3 },
@@ -25,55 +24,40 @@ function decideNPCMove(npcId, countries) {
 
   if (attacker.soldiers < 3) return null;
 
-  let enemies = countries.filter(c =>
-    c.owner !== npcId && c.soldiers >= 2
-  );
+  let enemies = countries.filter(c => c.owner !== npcId && c.soldiers >= 2);
 
   if (enemies.length === 0) {
-    enemies = countries.filter(c =>
-      c.owner === 'player' && c.soldiers >= 1
-    );
+    enemies = countries.filter(c => c.owner === 'player' && c.soldiers >= 1);
   }
-
   if (enemies.length === 0) return null;
 
-  const target = enemies.reduce((a, b) =>
-    a.soldiers < b.soldiers ? a : b
-  );
-
+  const target = enemies.reduce((a, b) => a.soldiers < b.soldiers ? a : b);
   const advantage = attacker.soldiers - target.soldiers;
+  
   if (advantage < personality.minSoldierAdvantage) return null;
 
   return { attacker, target, personality };
 }
 
-// ⭐ Notice there is no 'async' here anymore!
+// NO ASYNC HERE
 function simulateNPCTurn(npcId, game) {
   const log = [];
-
   const npcCountries = game.countries.filter(c => c.owner === npcId);
-  if (npcCountries.length === 0) {
-    return []; 
-  }
+  if (npcCountries.length === 0) return [];
 
   let conquestsThisTurn = 0;
   let attacksThisTurn = 0;
-
   const personality = NPC_PERSONALITIES[getPersonality(npcId)];
 
   while (attacksThisTurn < personality.maxAttacksPerTurn) {
     attacksThisTurn++;
-
     const move = decideNPCMove(npcId, game.countries);
     if (!move) {
-      if (attacksThisTurn === 1) {
-        log.push(`🤖 ${npcId} chooses not to attack this turn.`);
-      }
+      if (attacksThisTurn === 1) log.push(`🤖 ${npcId} chooses not to attack this turn.`);
       break;
     }
 
     const { attacker, target } = move;
-
     if (conquestsThisTurn >= personality.maxConquestsPerTurn) {
       log.push(`🤖 ${npcId} has conquered enough for this turn.`);
       break;
@@ -85,7 +69,7 @@ function simulateNPCTurn(npcId, game) {
     attacker.soldiers -= result.attackerLosses;
     target.soldiers -= result.defenderLosses;
 
-    // ⭐ FAST LOG (No AI for NPCs)
+    // FAST LOG (No AI for NPCs to prevent timeout)
     log.push(`⚔️ ${attacker.name} attacked ${target.name}. Rolls: ${result.attackerRolls.join(',')} vs ${result.defenderRolls.join(',')}. Losses: ${result.attackerLosses} vs ${result.defenderLosses}.`);
 
     if (target.soldiers <= 0) {
@@ -95,16 +79,11 @@ function simulateNPCTurn(npcId, game) {
       target.soldiers = 1;
       attacker.soldiers += gained;
       conquestsThisTurn++;
-
       log.push(`🏴 ${npcId} conquered ${target.name}!`);
     }
 
-    if (attacker.soldiers < 2) {
-      log.push(`🤖 ${npcId} is too weak to continue.`);
-      break;
-    }
+    if (attacker.soldiers < 2) break;
   }
-
   return log;
 }
 
