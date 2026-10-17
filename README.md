@@ -20,15 +20,20 @@ https://geopolitics-game.onrender.com
 - Password: test1234
 
 ## Database Access
-- (Put your MongoDB username and password here so the graders can view the database)
+The database is hosted on MongoDB Atlas (Cluster: geopolitics). 
 
-## Database Access
-The database is hosted on MongoDB Atlas. 
-Access has been granted to the following UCT staff emails, as requested in the brief:
-- ammarcanani_gmail_com
-- mc_tanner_uct_ac_za
-- ridewaan_hanslo_uct_ac_za
+As requested in the brief, I have created specific database users for the UCT graders. You can use any of the following credentials to connect to the database:
 
-**Database Password for all three accounts:** `UctGrader2026`
+**Option 1:**
+- Username: `ammarcanani_gmail_com`
+- Password: `UctGrader2026`
 
-*(Note: The database cluster allows access from anywhere (0.0.0.0/0) so you can connect directly from your location).*
+**Option 2:**
+- Username: `mc_tanner_uct_ac_za`
+- Password: `UctGrader2026`
+
+**Option 3:**
+- Username: `ridewaan_hanslo_uct_ac_za`
+- Password: `UctGrader2026`
+
+*(Note: MongoDB does not allow special characters like '@' or '.' in usernames, which is why the emails are formatted with underscores. The connection string is: `mongodb+srv://<username>:UctGrader2026@jaydee.msidnyb.mongodb.net/geopolitics`)*

@@ -1,4 +1,3 @@
-const { generateBattleCommentary } = require('./aiCommentary');
 const { resolveBattle, soldiersGained } = require('./battle');
 
 // NPC personalities
@@ -48,13 +47,13 @@ function decideNPCMove(npcId, countries) {
   return { attacker, target, personality };
 }
 
-async function simulateNPCTurn(npcId, game) {
+// ⭐ Notice there is no 'async' here anymore!
+function simulateNPCTurn(npcId, game) {
   const log = [];
 
-  // ⭐ Skip eliminated NPCs entirely
   const npcCountries = game.countries.filter(c => c.owner === npcId);
   if (npcCountries.length === 0) {
-    return []; // No log, no message—they're eliminated
+    return []; 
   }
 
   let conquestsThisTurn = 0;
@@ -86,19 +85,8 @@ async function simulateNPCTurn(npcId, game) {
     attacker.soldiers -= result.attackerLosses;
     target.soldiers -= result.defenderLosses;
 
-  const commentary = await generateBattleCommentary({
-  attackerName: attacker.name,
-  defenderName: target.name,
-  attackerSoldiers: attacker.soldiers + result.attackerLosses,
-  defenderSoldiers: target.soldiers + result.defenderLosses,
-  attackerRolls: result.attackerRolls,
-  defenderRolls: result.defenderRolls,
-  attackerLosses: result.attackerLosses,
-  defenderLosses: result.defenderLosses,
-  conquered: target.soldiers <= 0
-});
-
-log.push(`🤖 ${npcId}: ${commentary}`);
+    // ⭐ FAST LOG (No AI for NPCs)
+    log.push(`⚔️ ${attacker.name} attacked ${target.name}. Rolls: ${result.attackerRolls.join(',')} vs ${result.defenderRolls.join(',')}. Losses: ${result.attackerLosses} vs ${result.defenderLosses}.`);
 
     if (target.soldiers <= 0) {
       const gained = soldiersGained(target.soldiers + result.defenderLosses);
