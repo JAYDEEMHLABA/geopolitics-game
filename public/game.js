@@ -1,4 +1,17 @@
 const token = localStorage.getItem('token');
+const bgMusic = document.getElementById('bg-music');
+const attackSound = document.getElementById('attack-sound');
+
+// Start music on load (set to a very low volume for war ambiance)
+if (bgMusic) {
+    bgMusic.volume = 0.1; // 10% volume for low background war song
+    bgMusic.play().catch(e => {
+        // Browsers block autoplay. We wait for the user to click the screen once.
+        document.body.addEventListener('click', () => {
+            bgMusic.play();
+        }, { once: true });
+    });
+}
 const username = localStorage.getItem('username');
 const API = '/api/game';
 
@@ -121,6 +134,12 @@ async function executeAttack(attacker = selectedAttacker, defender = null) {
     
     try {
         document.getElementById('battle-log').innerHTML = `<p>Rolling dice...</p>`;
+            // Play attack sound effect
+    if (attackSound) {
+        attackSound.currentTime = 0; // Reset sound to start
+        attackSound.volume = 0.4; // Medium volume for the clash
+        attackSound.play().catch(e => console.log("Audio play blocked"));
+    }
         const res = await fetch(`${API}/${currentGame._id}/attack`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -129,9 +148,18 @@ async function executeAttack(attacker = selectedAttacker, defender = null) {
         
         const data = await res.json();
         
-        if (res.ok) {
+                if (res.ok) {
             currentGame = data.game;
-            selectedAttacker = null; // Reset selection
+            selectedAttacker = null;
+            
+            // Check for WIN
+            if (currentGame.status === 'won') {
+                triggerVictory();
+            } else if (currentGame.status === 'lost') {
+                alert("💀 You have been eliminated! Better luck next time.");
+                document.getElementById('battle-log').innerHTML += `<p style="color:red; font-weight:bold;">GAME OVER</p>`;
+            }
+
             renderGame();
         } else {
             alert(data.message);
@@ -151,9 +179,17 @@ async function endTurn() {
         });
         
         const data = await res.json();
-        if (res.ok) {
+                if (res.ok) {
             currentGame = data;
             selectedAttacker = null;
+
+            // Check for WIN or LOSS after NPCs play
+            if (currentGame.status === 'won') {
+                triggerVictory();
+            } else if (currentGame.status === 'lost') {
+                alert("💀 You have been eliminated by the NPCs!");
+            }
+
             renderGame();
         }
     } catch (err) {
@@ -189,4 +225,36 @@ async function createNewGame() {
 function logout() {
     localStorage.clear();
     window.location.href = '/';
+}
+
+function triggerVictory() {
+    // 1. Play sound
+    const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'); // A free victory sound
+    winSound.play().catch(e => console.log("Audio blocked by browser"));
+    
+    // 2. Fire Confetti
+    var duration = 5 * 1000;
+    var animationEnd = Date.now() + duration;
+    var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+    function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        var particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+        confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
+
+    // 3. Show alert
+    setTimeout(() => {
+        alert("🏆 VICTORY! You have conquered the world! 🌍🎉");
+    }, 500);
 }
