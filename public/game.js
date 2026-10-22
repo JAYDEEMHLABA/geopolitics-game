@@ -4,7 +4,7 @@ const attackSound = document.getElementById('attack-sound');
 
 // Start music on load (set to a very low volume for war ambiance)
 if (bgMusic) {
-    bgMusic.volume = 0.1; // 10% volume for low background war song
+    bgMusic.volume = 0.05; // 5% volume for low background war song
     bgMusic.play().catch(e => {
         // Browsers block autoplay. We wait for the user to click the screen once.
         document.body.addEventListener('click', () => {
@@ -137,7 +137,7 @@ async function executeAttack(attacker = selectedAttacker, defender = null) {
             // Play attack sound effect
     if (attackSound) {
         attackSound.currentTime = 0; // Reset sound to start
-        attackSound.volume = 0.4; // Medium volume for the clash
+        attackSound.volume = 0.02; // Medium volume for the clash
         attackSound.play().catch(e => console.log("Audio play blocked"));
     }
         const res = await fetch(`${API}/${currentGame._id}/attack`, {
@@ -233,7 +233,7 @@ function triggerVictory() {
     winSound.play().catch(e => console.log("Audio blocked by browser"));
     
     // 2. Fire Confetti
-    var duration = 5 * 1000;
+    var duration = 25 * 1000;
     var animationEnd = Date.now() + duration;
     var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
 
