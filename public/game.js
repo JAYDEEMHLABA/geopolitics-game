@@ -4,7 +4,7 @@ const attackSound = document.getElementById('attack-sound');
 
 // Start music on load (set to a very low volume for war ambiance)
 if (bgMusic) {
-    bgMusic.volume = 0.05; // 5% volume for low background war song
+    bgMusic.volume = 0.01; // 1% volume for low background war song
     bgMusic.play().catch(e => {
         // Browsers block autoplay. We wait for the user to click the screen once.
         document.body.addEventListener('click', () => {
